@@ -10,7 +10,7 @@ import config
 import network.coms
 import network.master_lgc
 import gui.gui
-
+import worker_logic.worker
 
 
 
@@ -29,6 +29,9 @@ def main():
     if config.get("Position") == "":
         config.set_role()
         config.detect_interfaces()
+    
+    #TODO: initialize network based on role
+    #TODO: INITIALIZE GUI IF MASTER
     
 
 
