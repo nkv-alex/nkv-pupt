@@ -1,4 +1,4 @@
-import coms
+from network import coms
 
 def start():
     coms.load_config()
