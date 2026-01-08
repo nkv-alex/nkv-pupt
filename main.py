@@ -7,11 +7,14 @@ import subprocess
 
 # MODULOS PROPIOS
 import config
-import network.coms
-import network.master_lgc
+import network
+import network
 import gui.gui
-import worker_logic.worker
-
+import worker_logic
+from network import master_lgc
+from network import coms
+from gui import gui
+from worker_logic import worker
 
 
 CONFIG_FILE = "config.json"
@@ -31,8 +34,7 @@ def main():
         config.detect_interfaces()
 
     master_lgc.start()
-    #TODO: initialize network based on role
-    #TODO: INITIALIZE GUI IF MASTER
+    gui.gui.root.mainloop()
     
 
 

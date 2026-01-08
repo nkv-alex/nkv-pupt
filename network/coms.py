@@ -1,3 +1,4 @@
+#TODO: NEED IMPLEMENTATION BASED ON ROLE 
 import socket
 import threading
 import pickle
@@ -9,8 +10,6 @@ import uuid
 import os
 
 CONFIG_FILE = 'config.json'
-
-
 
 def load_config():
     if not os.path.exists(CONFIG_FILE):
@@ -52,9 +51,9 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
     RESPONSE_PREFIX = "DISCOVER_RESPONSE"
     HOSTS_FILE = "hosts.json"
 
+    # Usa la variable global 'interfaces' cargada por discover_send() o al importar el módulo
     global interfaces
-    
-    internals = list(interfaces.get('Internals', {}).keys())
+    internals = [iface for iface, v in interfaces.items() if v.get("type", "internal") == "internal"]
 
     def save_hosts(discovered):
         try:
@@ -89,7 +88,7 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
                     parts = text.split(":", 2)
                     hostname = parts[1] if len(parts) > 1 else ip
                     nodeid = parts[2] if len(parts) > 2 else ""
-                    discovered_total[ip] = {"hostname": hostname.strip(), "nodeid": nodeid.strip()}
+                    discovered_total[ip] = {hostname.strip():nodeid.strip()}
                     print(f"[discover:{iface}] response from {ip} -> {hostname}")
             except socket.timeout:
                 break
@@ -125,5 +124,3 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
                 print(f"[send] failed to send to {ip}: {e}")
 
     return discovered_total
-
-

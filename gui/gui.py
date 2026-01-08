@@ -1,13 +1,27 @@
 import tkinter as tk
 from tkinter import ttk
+import json
+import os
 
-# Sample list of parameters (replace with your actual list)
-params = [f"Parameter {i+1}" for i in range(25)]  # Example with 10 parameters; adjust as needed
+
+hosts = "../network/host.json"
+
+def load_hosts():
+    if not os.path.exists(hosts):
+        return {}
+    with open(hosts, 'r') as f:
+        return json.load(f)
+
+
+usr = load_hosts()
+print(usr)
+
+
+params = usr.values()
 
 def create_small_window(title):
     small_win = tk.Toplevel(root)
     small_win.title(title)
-    # Make it 1/3 the size of the main window
     main_width = root.winfo_width()
     main_height = root.winfo_height()
     small_width = main_width // 3
@@ -16,18 +30,18 @@ def create_small_window(title):
     tk.Label(small_win, text=f"This is {title} window").pack(expand=True)
 
 def open_window1():
-    create_small_window("Window 1")
+    create_small_window("settings")
 
 def open_window2():
     create_small_window("Window 2")
 
 # Create main window
 root = tk.Tk()
-root.title("GUI Design")
-root.geometry("1200x800")  # Example size; adjust as needed
+root.title("app")
+root.geometry("1200x800")
 
-# Left scrollable area (15% width, gray background)
-left_width = int(0.15 * 800)  # 15% of total width
+
+left_width = int(0.25 * 800)  
 left_frame = tk.Frame(root, width=left_width, bg='gray')
 left_frame.pack(side='left', fill='both')
 
@@ -47,8 +61,7 @@ canvas.create_window((0, 0), window=inner_frame, anchor='nw', width=left_width)
 box_height = 300
 box_width = left_width - 5  # Small padding
 
-for i, param in enumerate(params):
-    # Create unique box for each parameter
+for i, (key, param) in enumerate(usr.items()):
     box = tk.Frame(inner_frame, width=box_width, height=box_height, 
                    bg='#4A4A4A', relief='raised', bd=2)
     box.pack(pady=5, padx=2, fill='x')  # fill='x' to use full width
@@ -62,8 +75,8 @@ for i, param in enumerate(params):
     content_frame = tk.Frame(box, bg='#4A4A4A')
     content_frame.pack(fill='both', expand=True, padx=10, pady=5)
     
-    # Example content - replace with your parameter-specific content
-    tk.Label(content_frame, text=f"Index: {i+1}", bg='#4A4A4A', fg='lightgray').pack(anchor='w')
+    # Mostrar la clave asociada al parámetro
+    tk.Label(content_frame, text=f"IP: {key}", bg='#4A4A4A', fg='lightgray').pack(anchor='w')
     tk.Label(content_frame, text=f"Height: {box_height}px", bg='#4A4A4A', fg='lightgray').pack(anchor='w')
 
 # Bind mousewheel to canvas for better scrolling
@@ -80,12 +93,12 @@ def update_scrollregion(event=None):
 inner_frame.bind('<Configure>', update_scrollregion)
 canvas.bind('<Configure>', update_scrollregion)
 
-# Right area (85% width, black background)
+
 right_frame = tk.Frame(root, bg='black')
 right_frame.pack(side='right', fill='both', expand=True)
 
-# First button (top right)
-button1 = tk.Button(right_frame, text="Open Window 1", command=open_window1, 
+
+button1 = tk.Button(right_frame, text="SETTINGS", command=open_window1, 
                    bg='gray', fg='white', font=('Arial', 10, 'bold'),
                    relief='raised', bd=2)
 button1.place(relx=1.0, rely=0.02, anchor='ne', x=-10)
@@ -95,6 +108,7 @@ button2 = tk.Button(right_frame, text="Open Window 2", command=open_window2,
                    bg='gray', fg='white', font=('Arial', 10, 'bold'),
                    relief='raised', bd=2)
 button2.place(relx=1.0, rely=0.08, anchor='ne', x=-10)
+
 
 # Run the GUI
 root.mainloop()
