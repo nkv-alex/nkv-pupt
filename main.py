@@ -6,11 +6,6 @@ import subprocess
 
 
 # MODULOS PROPIOS
-import config
-import network
-import network
-import gui.gui
-import worker_logic
 from network import master_lgc
 from network import coms
 from gui import gui
