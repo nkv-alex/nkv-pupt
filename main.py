@@ -29,7 +29,8 @@ def main():
     if config.get("Position") == "":
         config.set_role()
         config.detect_interfaces()
-    
+
+    master_lgc.start()
     #TODO: initialize network based on role
     #TODO: INITIALIZE GUI IF MASTER
     
