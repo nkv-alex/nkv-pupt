@@ -1,4 +1,4 @@
-__all__ = ["coms", "master_logic"]
+__all__ = ["coms", "master_lgc"]
 
 from . import coms
-from . import master_logic
+from . import master_lgc
