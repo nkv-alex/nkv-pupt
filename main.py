@@ -32,9 +32,12 @@ def main():
     if config.get("Position") == "":
         config.set_role()
         config.detect_interfaces()
-
-    master_lgc.start()
-    gui.gui.root.mainloop()
+    if config.get("Role") == "master":
+        master_lgc.start()
+        gui.gui.root.mainloop()
+    elif config.get("Role") == "worker":
+        worker.start()
+    
     
 
 
