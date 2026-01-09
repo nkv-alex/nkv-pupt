@@ -49,7 +49,7 @@ def respuesta(mensaje: str):
 
 
 
-def run_listener(bind_ip="0.0.0.0", port=BROADCAST_PORT):
+def start(bind_ip="0.0.0.0", port=BROADCAST_PORT):
     """
     Escucha UDP en bind_ip:port
     Responde a DISCOVER_REQUEST y procesa distintos payloads
@@ -98,5 +98,3 @@ def run_listener(bind_ip="0.0.0.0", port=BROADCAST_PORT):
         except Exception as e:
             print(f"[listener] error: {e}")
 
-if __name__ == "__main__":
-    run_listener()
