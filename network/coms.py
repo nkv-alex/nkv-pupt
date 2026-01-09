@@ -86,10 +86,10 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
                 ip, _ = addr
                 if text.startswith(RESPONSE_PREFIX):
                     parts = text.split(":", 2)
-                    hostname = parts[1] if len(parts) > 1 else ip
+                    # Solo guardar ip:nodeid
                     nodeid = parts[2] if len(parts) > 2 else ""
-                    discovered_total[ip] = {hostname.strip(): nodeid.strip()}
-                    print(f"[discover:{iface}] response from {ip} -> {hostname}")
+                    discovered_total[ip] = nodeid.strip()
+                    print(f"[discover:{iface}] response from {ip} -> nodeid: {nodeid}")
             except socket.timeout:
                 break
             if time.time() - start_time > timeout:
@@ -100,10 +100,8 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
         return {}
 
     print(f"[discover] Total {len(discovered_total)} hosts found:")
-    for ip, info in discovered_total.items():
-        # info es un dict {hostname: nodeid}
-        for hostname, nodeid in info.items():
-            print(f"  - {ip} ({hostname}, nodeid: {nodeid})")
+    for ip, nodeid in discovered_total.items():
+        print(f"  - {ip} (nodeid: {nodeid})")
 
     save_hosts(discovered_total)
 
