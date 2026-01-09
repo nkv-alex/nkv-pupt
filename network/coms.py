@@ -39,21 +39,20 @@ def get_broadcast(iface):
             pass
 
 def discover_send():
-
     global interfaces
     config = load_config()
     interfaces = config.get('interfaces', {})
     return interfaces
 
-def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
 
+def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
     DISCOVER_MESSAGE_PREFIX = "DISCOVER_REQUEST"
     RESPONSE_PREFIX = "DISCOVER_RESPONSE"
     HOSTS_FILE = "./host.json"
 
-    # Usa la variable global 'interfaces' cargada por discover_send() o al importar el módulo
     global interfaces
-    internals = [iface for iface, v in interfaces.items() if v.get("type", "internal") == "internal"]
+    # Ahora obtenemos las interfaces internas según la estructura del config.json
+    internals = interfaces.get("Internal", {}).keys()
 
     def save_hosts(discovered):
         try:
@@ -88,7 +87,7 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
                     parts = text.split(":", 2)
                     hostname = parts[1] if len(parts) > 1 else ip
                     nodeid = parts[2] if len(parts) > 2 else ""
-                    discovered_total[ip] = {hostname.strip():nodeid.strip()}
+                    discovered_total[ip] = {hostname.strip(): nodeid.strip()}
                     print(f"[discover:{iface}] response from {ip} -> {hostname}")
             except socket.timeout:
                 break
@@ -101,25 +100,24 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
 
     print(f"[discover] Total {len(discovered_total)} hosts found:")
     for ip, info in discovered_total.items():
-        print(f"  - {ip} ({info.get('hostname')})")
+        # info es un dict {hostname: nodeid}
+        for hostname, nodeid in info.items():
+            print(f"  - {ip} ({hostname}, nodeid: {nodeid})")
 
     save_hosts(discovered_total)
 
     if send:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.settimeout(2.0)  
+        sock.settimeout(2.0)
         for ip in discovered_total.keys():
             try:
                 sock.sendto(payload.encode(), (ip, port))
                 print(f"[send] payload sent to {ip}")
-                
-               
                 try:
-                    data, addr = sock.recvfrom(1024) 
+                    data, addr = sock.recvfrom(1024)
                     print(f"[recv] response from {addr[0]}: {data.decode(errors='ignore')}")
                 except socket.timeout:
                     print(f"[recv] no response from {ip}")
-                
             except Exception as e:
                 print(f"[send] failed to send to {ip}: {e}")
 
