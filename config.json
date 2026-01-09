@@ -1,7 +1,7 @@
 {
     "Position": "not-set",
     "interfaces": {
-        "Externals":{},
-        "Internals":{}
+        "External":{},
+        "Internal":{}
     }
 }
