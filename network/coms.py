@@ -1,4 +1,4 @@
-#TODO: NEED IMPLEMENTATION BASED ON ROLE 
+
 import socket
 import threading
 import pickle
