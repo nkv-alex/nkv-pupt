@@ -2,99 +2,140 @@ import json
 import os
 import subprocess
 import ipaddress
+from typing import Dict
 
 CONFIG_FILE = "./config.json"
 
-def load_config():
+
+def load_config() -> Dict:
+    """Carga la configuración desde el archivo JSON. Devuelve dict vacío si no existe."""
     if not os.path.exists(CONFIG_FILE):
         return {}
-    with open(CONFIG_FILE, 'r') as f:
-        return json.load(f)
-    
-def save_config(config):
-    with open(CONFIG_FILE, 'w') as f:
-        json.dump(config, f, indent=4)
+    try:
+        with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError) as e:
+        print(f"[ERROR] No se pudo leer el archivo de configuración: {e}")
+        return {}
 
-def set_role():
+
+def save_config(config: Dict) -> None:
+    """Guarda la configuración en formato JSON bonito."""
+    try:
+        with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
+            json.dump(config, f, indent=4, ensure_ascii=False)
+    except IOError as e:
+        print(f"[ERROR] No se pudo guardar la configuración: {e}")
+
+
+def set_role() -> None:
+    """Configura el rol del nodo (master/worker)"""
     config = load_config()
-    
-    current = config.get('Position', 'not set')
+    current = config.get('role', 'not set')          # ← Recomiendo cambiar a 'role' (más claro)
     print(f"Current role: {current}")
-    
+
     role = input("Select role (master/worker) [master]: ").strip().lower()
     
-    if role == "":
+    if not role:
         role = "master"
-    
-    if role not in ("master", "worker"):
-        print("[WARN] Invalid role, using 'master'")
+    elif role not in ("master", "worker"):
+        print("[WARN] Invalid role, defaulting to 'master'")
         role = "master"
-    
-    config['Position'] = role
-    
+
+    config['role'] = role   # ← Sugerencia: usa 'role' en vez de 'Position'
     save_config(config)
     print(f"Rol actualizado correctamente a: {role}")
 
-def detect_interfaces():
-    """Detect interfaces and saves it in config.json."""
+
+def detect_interfaces() -> Dict:
+    """
+    Detecta interfaces de red con IPv4 (excluyendo virtuales comunes)
+    y permite clasificarlas como internas o externas.
+    """
     config = load_config()
-    
-    # Initialize interfaces structure if not present
+
+    # Aseguramos estructura básica
     if "interfaces" not in config:
         config["interfaces"] = {"Externals": {}, "Internals": {}}
-    
+
+    # Comando más limpio y portable (evita problemas con awk en algunos sistemas)
+    cmd = r"""
+    ip -o -4 addr show scope global \
+      | awk -F'[ /]+' '{print $2, $4}' \
+      | grep -vE '^(lo|docker|veth|br-|virbr|vmnet|tap|tun|wg|zabbix|pan)' || true
+    """
+
     try:
         res = subprocess.run(
-            "ip -o -4 addr show | awk '{print $2,$4}' | grep -Ev '^(lo|docker|veth|br-|virbr|vmnet|tap)' || true",
+            cmd,
+            shell=True,
             capture_output=True,
             text=True,
-            check=False,
-            shell=True
+            check=False
         )
     except Exception as e:
-        print(f"[ERROR] Error running 'ip': {e}")
+        print(f"[ERROR] Error ejecutando comando ip: {e}")
         return config.get("interfaces", {})
-    
+
     out = res.stdout.strip()
     if not out:
-        print("[ERROR] No interfaces with assigned IPv4 found.")
-        return config.get("interfaces", {})
+        print("[INFO] No se encontraron interfaces IPv4 válidas (scope global)")
+        return config["interfaces"]
 
-    print("\n=== Interface detection ===")
-
+    print("\n=== Detección de interfaces de red ===")
     updated = False
+
     for line in out.splitlines():
-        parts = line.split()
-        if len(parts) < 2:
+        if not line.strip():
             continue
 
-        iface, addr = parts[0], parts[1]
         try:
-            ipif = ipaddress.IPv4Interface(addr)
-        except Exception:
-            print(f"[WARN] Invalid address in {iface}: {addr}, skipping.")
+            iface, addr = line.split()
+            ip_interface = ipaddress.IPv4Interface(addr)
+        except (ValueError, ipaddress.AddressValueError) as e:
+            print(f"[WARN] Dirección inválida en {iface}: {addr} → {e}")
             continue
 
-        suggested = "i" if ipif.ip.is_private else "e"
-        tipo = input(f"\nDetected interface: {iface}\n  IP address: {ipif}\nIs this interface internal (i) or external (e)? [{suggested}]: ").strip().lower()
+        # Sugerencia automática: privada → internal, pública → external
+        suggested = "i" if ip_interface.ip.is_private else "e"
+        default_str = "internal" if suggested == "i" else "external"
 
-        if tipo == "":
-            tipo = suggested
-        if tipo not in ("i", "e", "internal", "external"):
-            tipo = suggested
+        print(f"\nInterfaz detectada: {iface}")
+        print(f"   Dirección IP: {ip_interface}")
+        print(f"   Sugerencia automática: {default_str}")
 
-        category = "Internals" if tipo.startswith("i") else "Externals"
-        config["interfaces"][category][iface] = str(ipif)
+        while True:
+            answer = input(f"¿Es interna (i) o externa (e)? [{suggested}]: ").strip().lower()
+            
+            if not answer:
+                answer = suggested
+            if answer in ('i', 'internal'):
+                category = "Internals"
+                break
+            if answer in ('e', 'external'):
+                category = "Externals"
+                break
+                
+            print("   [?] Por favor responde con 'i'/'internal' o 'e'/'external'")
+
+        config["interfaces"][category][iface] = str(ip_interface)
         updated = True
 
     if updated:
         save_config(config)
-        print(f"[INFO] Configuration updated in {CONFIG_FILE}")
+        print(f"[INFO] Configuración actualizada en {CONFIG_FILE}")
     else:
-        print("[INFO] No changes in interfaces.")
+        print("[INFO] No se realizaron cambios en las interfaces")
 
-    print("\nFinal summary:")
-    print(f"  Internal: {list(config['interfaces']['Internals'].keys())}")
-    print(f"  External: {list(config['interfaces']['Externals'].keys())}")
+    # Resumen final
+    print("\nResumen final de interfaces:")
+    print(f"  Internas: {list(config['interfaces']['Internals'].keys())}")
+    print(f"  Externas: {list(config['interfaces']['Externals'].keys())}\n")
 
     return config["interfaces"]
+
+
+if __name__ == "__main__":
+    # Ejemplos de uso:
+    # set_role()
+    detect_interfaces()
