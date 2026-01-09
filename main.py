@@ -26,15 +26,14 @@ def load_config():
 def main():
     config = load_config()
     if config.get("Position") == "":
-        # Llama aquí a las funciones globales si existen
-        # set_role()
-        # detect_interfaces()
-        pass  # Elimina este pass cuando implementes las funciones
-    if config.get("Role") == "master":
+        config.set_role()
+        config.detect_interfaces()
+    if config.get("Position") == "master":
         master_lgc.start()
         gui.gui.root.mainloop()
-    elif config.get("Role") == "worker":
+    elif config.get("Position") == "worker":
         worker.start()
+    
     
 
 
