@@ -1,5 +1,5 @@
-import tk
-from tk import ttk
+import tkinter as tk
+from tkinter import ttk
 import json
 import os
 
@@ -64,12 +64,16 @@ box_width = left_width - 5  # Small padding
 for i, (key, param) in enumerate(usr.items()):
     box = tk.Frame(inner_frame, width=box_width, height=box_height, 
                    bg='#4A4A4A', relief='raised', bd=2)
-    box.pack(pady=5, padx=2, fill='x')  # fill='x' to use full width
+    box.pack(pady=5, padx=2, fill='x')
     
-    # Parameter title
-    title_label = tk.Label(box, text=f"{param}", font=('Arial', 10, 'bold'),
-                          bg='#4A4A4A', fg='white', anchor='w')
-    title_label.pack(pady=10, padx=10, fill='x')
+    # Botón con el nombre del parámetro
+    def on_param_click(k=key, p=param):
+        print(f"Botón de parámetro presionado: IP={k}, info={p}")
+        # Aquí puedes abrir una ventana o mostrar más info si quieres
+    param_btn = tk.Button(box, text=f"{param}", font=('Arial', 10, 'bold'),
+                          bg='#4A4A4A', fg='white', anchor='w', relief='raised', bd=2,
+                          command=on_param_click)
+    param_btn.pack(pady=10, padx=10, fill='x')
     
     # Add some content to show it's a unique box (customize as needed)
     content_frame = tk.Frame(box, bg='#4A4A4A')
