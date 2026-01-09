@@ -30,7 +30,7 @@ def main():
         config.detect_interfaces()
     if config.get("Position") == "master":
         master_lgc.start()
-        gui.gui.root.mainloop()
+        gui.gui_start()
     elif config.get("Position") == "worker":
         worker.start()
     
