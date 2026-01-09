@@ -11,7 +11,7 @@ from network import master_lgc
 from network import coms
 from gui import gui
 from worker_logic import worker
-
+import configuration
 
 CONFIG_FILE = "./config.json"
 
@@ -24,14 +24,14 @@ def load_config():
 
 
 def main():
-    config = load_config()
-    if config.get("Position") == "":
-        config.set_role()
-        config.detect_interfaces()
-    if config.get("Position") == "master":
+    files = load_config()
+    if files.get("Position") == "":
+        configuration.set_role()
+        configuration.detect_interfaces()
+    if configuration.get("Position") == "master":
         master_lgc.start()
         gui.gui_start()
-    elif config.get("Position") == "worker":
+    elif files.get("Position") == "worker":
         worker.start()
     
     
