@@ -109,11 +109,11 @@ def detect_interfaces() -> Dict:
             
             if not answer:
                 answer = suggested
-            if answer in ('i', 'internal'):
-                category = "Internals"
+            if answer in ('i', 'interna'):
+                category = "Internal"
                 break
-            if answer in ('e', 'external'):
-                category = "Externals"
+            if answer in ('e', 'externa'):
+                category = "External"
                 break
                 
             print("   [?] Por favor responde con 'i'/'internal' o 'e'/'external'")
@@ -129,13 +129,11 @@ def detect_interfaces() -> Dict:
 
     # Resumen final
     print("\nResumen final de interfaces:")
-    print(f"  Internas: {list(config['interfaces']['Internals'].keys())}")
-    print(f"  Externas: {list(config['interfaces']['Externals'].keys())}\n")
+    print(f"  Internas: {list(config['interfaces']['Internal'].keys())}")
+    print(f"  Externas: {list(config['interfaces']['External'].keys())}\n")
 
     return config["interfaces"]
 
 
 if __name__ == "__main__":
-    # Ejemplos de uso:
-    # set_role()
     detect_interfaces()
