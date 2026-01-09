@@ -47,7 +47,7 @@ def get_broadcast(iface):
 def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
     DISCOVER_MESSAGE_PREFIX = "DISCOVER_REQUEST"
     RESPONSE_PREFIX = "DISCOVER_RESPONSE"
-    HOSTS_FILE = "./host.json"
+    HOSTS_FILE = "host.json"
 
   
     config = load_config()
