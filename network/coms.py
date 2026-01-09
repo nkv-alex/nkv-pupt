@@ -49,7 +49,7 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
 
     DISCOVER_MESSAGE_PREFIX = "DISCOVER_REQUEST"
     RESPONSE_PREFIX = "DISCOVER_RESPONSE"
-    HOSTS_FILE = "hosts.json"
+    HOSTS_FILE = "./host.json"
 
     # Usa la variable global 'interfaces' cargada por discover_send() o al importar el módulo
     global interfaces
