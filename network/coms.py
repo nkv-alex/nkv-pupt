@@ -22,11 +22,12 @@ _config = load_config()
 interfaces = _config.get('interfaces', {})
 
 def get_broadcast(iface):
+    print("enviado brodcast")
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         return socket.inet_ntoa(fcntl.ioctl(
             s.fileno(),
-            0x8919,  # SIOCGIFBRDADDR
+            0x8919,  # 
             struct.pack('256s', iface.encode('utf-8')[:15])
         )[20:24])
     except Exception as e:
