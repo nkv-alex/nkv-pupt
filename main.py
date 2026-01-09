@@ -28,7 +28,7 @@ def main():
     if files.get("Position") == "":
         configuration.set_role()
         configuration.detect_interfaces()
-    if configuration.get("Position") == "master":
+    if files.get("Position") == "master":
         master_lgc.start()
         gui.gui_start()
     elif files.get("Position") == "worker":
