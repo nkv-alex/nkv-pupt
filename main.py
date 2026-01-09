@@ -13,7 +13,7 @@ from gui import gui
 from worker_logic import worker
 
 
-CONFIG_FILE = "config.json"
+CONFIG_FILE = "./config.json"
 
 
 def load_config():
