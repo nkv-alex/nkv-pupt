@@ -17,18 +17,23 @@ def save_config(config):
 
 def set_role():
     config = load_config()
-    current = config['Position']
+    
+    current = config.get('Position', 'not set')
     print(f"Current role: {current}")
-
+    
     role = input("Select role (master/worker) [master]: ").strip().lower()
+    
     if role == "":
         role = "master"
+    
     if role not in ("master", "worker"):
         print("[WARN] Invalid role, using 'master'")
         role = "master"
-
+    
     config['Position'] = role
+    
     save_config(config)
+    print(f"Rol actualizado correctamente a: {role}")
 
 def detect_interfaces():
     """Detect interfaces and saves it in config.json."""
