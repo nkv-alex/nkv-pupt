@@ -3,9 +3,7 @@ from tkinter import ttk
 import json
 import os
 
-
-hosts = "../network/host.json"
-
+hosts = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "network", "host.json")
 
 def gui_start():
 
