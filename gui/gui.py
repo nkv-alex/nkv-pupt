@@ -1,5 +1,5 @@
-import tkinter as tk
-from tkinter import ttk
+import tk
+from tk import ttk
 import json
 import os
 
