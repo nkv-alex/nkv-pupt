@@ -42,7 +42,7 @@ def set_role() -> None:
         print("[WARN] Invalid role, defaulting to 'master'")
         role = "master"
 
-    config['role'] = role   # ← Sugerencia: usa 'role' en vez de 'Position'
+    config['Position'] = role   # ← Sugerencia: usa 'role' en vez de 'Position'
     save_config(config)
     print(f"Rol actualizado correctamente a: {role}")
 

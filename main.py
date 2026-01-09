@@ -25,7 +25,7 @@ def load_config():
 
 def main():
     files = load_config()
-    if files.get("Position") == "":
+    if files.get("Position") == "not-set":
         configuration.set_role()
         configuration.detect_interfaces()
     if files.get("Position") == "master":
