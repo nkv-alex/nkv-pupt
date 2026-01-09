@@ -45,7 +45,8 @@ def respuesta(mensaje: str):
     print(f"[listener] Respuesta enviada a {ip}:{port} → {mensaje}")
 
 
-
+def recon():
+    print("Recon function called")
 
 
 
@@ -86,7 +87,8 @@ def start(bind_ip="0.0.0.0", port=BROADCAST_PORT):
                 case "info":
                     respuesta(f"Host: {hostname}, IP: {ip}")
 
-                
+                case "recon":
+                    # Aquí se podría agregar lógica adicional para "recon"                
 
                 case _:
                     print(f"[listener] mensaje desconocido de {ip}: '{text}'")

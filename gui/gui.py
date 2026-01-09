@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 import json
 import os
+from network import coms
+
 
 hosts = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "network", "host.json")
 
@@ -69,7 +71,7 @@ def gui_start():
         
         # Botón con el nombre del parámetro
         def on_param_click(k=key, p=param):
-            print(f"Botón de parámetro presionado: IP={k}, info={p}")
+            coms.send_ip(k,"recon")
             # Aquí puedes abrir una ventana o mostrar más info si quieres
         param_btn = tk.Button(box, text=f"{param}", font=('Arial', 10, 'bold'),
                             bg='#4A4A4A', fg='white', anchor='w', relief='raised', bd=2,

@@ -44,6 +44,7 @@ def get_broadcast(iface):
 
 
 def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
+
     DISCOVER_MESSAGE_PREFIX = "DISCOVER_REQUEST"
     RESPONSE_PREFIX = "DISCOVER_RESPONSE"
     HOSTS_FILE = os.path.join(BASE_DIR, "network", "host.json")
@@ -121,3 +122,23 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
                 print(f"[send] failed to send to {ip}: {e}")
 
     return discovered_total
+
+def send_ip(ip, payload, port=5005, timeout=2.0):
+    """Envía un payload UDP a una IP específica."""
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.settimeout(timeout)
+        sock.sendto(payload.encode(), (ip, port))
+        print(f"[send_ip] Payload enviado a {ip}:{port}")
+        try:
+            data, addr = sock.recvfrom(1024)
+            print(f"[send_ip] Respuesta de {addr[0]}: {data.decode(errors='ignore')}")
+        except socket.timeout:
+            print(f"[send_ip] Sin respuesta de {ip}")
+    except Exception as e:
+        print(f"[send_ip] Error enviando a {ip}: {e}")
+    finally:
+        try:
+            sock.close()
+        except Exception:
+            pass
