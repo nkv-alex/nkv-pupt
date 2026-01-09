@@ -46,12 +46,11 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
     RESPONSE_PREFIX = "DISCOVER_RESPONSE"
     HOSTS_FILE = "./host.json"
 
-    global interfaces
+  
     config = load_config()
     print(f"[coms] Loaded config: {config}")
     interfaces = config.get('interfaces', {})
     print(f"[coms] Using interfaces from config: {interfaces}")
-    global interfaces
     # Ahora obtenemos las interfaces internas según la estructura del config.json
     internals = interfaces.get("Internal", {}).keys()
     print(f"[coms] Using internal interfaces: {list(internals)}")
