@@ -17,9 +17,9 @@ def save_config(config):
 
 def set_role():
     config = load_config()
-    current = config.get('Position', 'not set')
+    current = config['Position']
     print(f"Current role: {current}")
-        
+
     role = input("Select role (master/worker) [master]: ").strip().lower()
     if role == "":
         role = "master"
