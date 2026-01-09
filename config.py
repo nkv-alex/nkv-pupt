@@ -3,7 +3,7 @@ import os
 import subprocess
 import ipaddress
 
-CONFIG_FILE = "config.json"
+CONFIG_FILE = "./config.json"
 
 def load_config():
     if not os.path.exists(CONFIG_FILE):
