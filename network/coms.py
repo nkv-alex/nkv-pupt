@@ -54,6 +54,7 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
     global interfaces
     # Ahora obtenemos las interfaces internas según la estructura del config.json
     internals = interfaces.get("Internal", {}).keys()
+    print(f"[coms] Using internal interfaces: {list(internals)}")
 
     def save_hosts(discovered):
         try:
