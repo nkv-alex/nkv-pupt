@@ -91,7 +91,8 @@ def start(bind_ip="0.0.0.0", port=BROADCAST_PORT):
                     respuesta(f"Host: {hostname}, IP: {ip}")
 
                 case "recon":
-                    # Aquí se podría agregar lógica adicional para "recon"                
+                    a = recon.recon()
+                    respuesta({a})              
 
                 case _:
                     print(f"[listener] mensaje desconocido de {ip}: '{text}'")
