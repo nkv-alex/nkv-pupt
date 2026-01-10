@@ -1,4 +1,4 @@
-
+psutill==7.2.1
 Pillow==10.4.0  
 zeroconf==0.132.2
 asyncio-mqtt==0.16.0
