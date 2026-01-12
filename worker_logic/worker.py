@@ -12,18 +12,17 @@ import os
 import shutil
 
 
-from worker_logic import recon
+from worker_logic.functions import recon
 
 BROADCAST_PORT = 5005
 BUFFER_SIZE = 1024
 DISCOVER_PREFIX = "DISCOVER_REQUEST"
 RESPONSE_PREFIX = "DISCOVER_RESPONSE"
 
-# Variables globales para la última conexión activa
 _last_addr = None
 _last_sock = None
 
-ip_hostname_map = []  # Global variable to store IP?=HOSTNAME mappings
+ip_hostname_map = []  
 
 def run(cmd, check=True):
     return subprocess.run(cmd, shell=True, check=check, capture_output=True, text=True)
@@ -49,15 +48,12 @@ def respuesta(mensaje: str):
 
 
 def recon():
-    print("Recon function called")
+    ''' devuelve estadistica del sistema'''
+    a = recon.recon()
 
 
 
 def start(bind_ip="0.0.0.0", port=BROADCAST_PORT):
-    """
-    Escucha UDP en bind_ip:port
-    Responde a DISCOVER_REQUEST y procesa distintos payloads
-    """
     global _last_addr, _last_sock
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

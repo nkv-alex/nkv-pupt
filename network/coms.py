@@ -124,7 +124,6 @@ def send_to_hosts(payload, port=5005, timeout=2.0, send=True):
     return discovered_total
 
 def send_ip(ip, payload, port=5005, timeout=2.0):
-    """Envía un payload UDP a una IP específica."""
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(timeout)
@@ -133,6 +132,7 @@ def send_ip(ip, payload, port=5005, timeout=2.0):
         try:
             data, addr = sock.recvfrom(1024)
             print(f"[send_ip] Respuesta de {addr[0]}: {data.decode(errors='ignore')}")
+            return data.decode(errors='ignore')
         except socket.timeout:
             print(f"[send_ip] Sin respuesta de {ip}")
     except Exception as e:
