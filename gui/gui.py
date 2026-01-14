@@ -116,7 +116,7 @@ def gui_start():
     button2.place(relx=1.0, rely=0.08, anchor='ne', x=-10)
 
 
-# Dentro del right_frame (después de crearlo)
+ # Dentro del right_frame (después de crearlo)
 right_frame = tk.Frame(root, bg='black')
 right_frame.pack(side='right', fill='both', expand=True)
 
