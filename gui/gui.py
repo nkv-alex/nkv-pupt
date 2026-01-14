@@ -117,37 +117,37 @@ def gui_start():
 
 
  # Dentro del right_frame (después de crearlo)
-right_frame = tk.Frame(root, bg='black')
-right_frame.pack(side='right', fill='both', expand=True)
-
-# Botones con altura fija y ancho completo
-botones = [
-    ("Iniciar Escaneo", "#2a9d8f"),
-    ("Ver Logs", "#e9c46a"),
-    ("Configuración Avanzada", "#e76f51"),
-    ("Reiniciar Todo", "#e63946")
-]
-
-for texto, color in botones:
-    btn = tk.Button(
-        right_frame,
-        text=texto,
-        font=('Arial', 12, 'bold'),
-        bg=color,
-        fg='white',
-        activebackground='#ffffff',
-        activeforeground='black',
-        relief='flat',
-        bd=0,
-        height=3,                    # ← altura en líneas de texto (ajusta según necesites)
-        # o también puedes usar: height=60 (en píxeles) pero con compound y padx/pady
-        command=lambda t=texto: print(f"Presionado: {t}"),  # cambia por tu función
-    )
-    btn.pack(
-        fill='x',                    # ← ocupa todo el ancho disponible
-        padx=20,                     # margen lateral
-        pady=8,                      # separación entre botones
-        ipady=10                     # padding interno vertical extra (opcional)
-    )
-    # Run the GUI
+    right_frame = tk.Frame(root, bg='black')
+    right_frame.pack(side='right', fill='both', expand=True)
+    
+    # Botones con altura fija y ancho completo
+    botones = [
+        ("Iniciar Escaneo", "#2a9d8f"),
+        ("Ver Logs", "#e9c46a"),
+        ("Configuración Avanzada", "#e76f51"),
+        ("Reiniciar Todo", "#e63946")
+    ]
+    
+    for texto, color in botones:
+        btn = tk.Button(
+            right_frame,
+            text=texto,
+            font=('Arial', 12, 'bold'),
+            bg=color,
+            fg='white',
+            activebackground='#ffffff',
+            activeforeground='black',
+            relief='flat',
+            bd=0,
+            height=3,                    # ← altura en líneas de texto (ajusta según necesites)
+            # o también puedes usar: height=60 (en píxeles) pero con compound y padx/pady
+            command=lambda t=texto: print(f"Presionado: {t}"),  # cambia por tu función
+        )
+        btn.pack(
+            fill='x',                    # ← ocupa todo el ancho disponible
+            padx=20,                     # margen lateral
+            pady=8,                      # separación entre botones
+            ipady=10                     # padding interno vertical extra (opcional)
+        )
+        # Run the GUI
     root.mainloop()
