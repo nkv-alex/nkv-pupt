@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# puentemaster.py - Escanea la red y conecta por SSH
 # Requisitos: sudo apt install nmap iproute2
 #             pip3 install paramiko --break-system-packages
 
@@ -27,7 +26,6 @@ def obtener_interfaces():
             cidr   = partes[3]          
             ip     = cidr.split("/")[0]
             prefijo = cidr.split("/")[1]
-            # calcular red base
             import ipaddress
             red = str(ipaddress.IPv4Network(cidr, strict=False))
             ifaces.append({"nombre": nombre, "ip": ip, "red": red})
